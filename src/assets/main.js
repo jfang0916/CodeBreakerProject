@@ -4,39 +4,38 @@ let attempt = document.getElementById('attempt');
 function guess() {
     let input = document.getElementById('user-guess');
     //add functionality to guess function here
-    if(answer=='' or attempt == ''){
+    if(answer.value == '' || attempt.value == ''){
       setHiddenFields();
     }
     if(validateInput(input.value)){
-      attempt+=1;
+      attempt.value+=1;
     }else{
       return false;
     }
-    if(getResults(input)){
-      setMessage("You Win! :)");
+    if(getResults(input.value)){
+      setMessage('You Win! :)');
       showAnswer(true);
       showReplay();
-    }else if(attempt>=10){
+    }else if(attempt.value >= 10){
       setMessage("You Lose! :(");
       showAnswer(false);
       showReplay();
+    }else{
+      setMessage("Incorrect, try again.");
     }
-    setMessage("Incorrect, try again.");
 }
 
 //implement new functions here
 function setHiddenFields() {
-  answer = Math.floor(9999*Math.random());
-  answer = answer.toString();
-  while(answer.length<4){
-    answer = '0'+answer;
+  answer.value = Math.floor(9999*Math.random()).toString();
+  while(answer.value.length < 4){
+    answer.value = '0'+answer.value;
   }
-  attempt = 0;
+  attempt.value = "0";
 }
 
 function setMessage(msg){
-  let message = document.getElementById('message');
-  message.innerHTML = msg;
+  document.getElementById('message').innerHTML = msg;
 }
 
 function validateInput(input){
@@ -50,22 +49,19 @@ function validateInput(input){
 }
 
 function getResults(res){
-  let cnt = 0;
-  let tmp = <div class="row"><span class="col-md-6">' + res + '</span><div class="col-md-6">;
+  let tmp = '<div class="row"><span class="col-md-6">' + res + '</span><div class="col-md-6">';
   for(i = 0;i<4;i++){
-    if(res[i]===answer[i]){
-      tmp+=<span class="glyphicon glyphicon-ok"></span>;
-      cnt++;
-    }else if(answer.includes(res[i])){
-      tmp+=<span class="glyphicon glyphicon-transfer"></span>;
+    if(res[i]==answer.value[i]){
+      tmp+='<span class="glyphicon glyphicon-ok"></span>';
+    }else if(answer.value.indexOf(res[i]) > -1){
+      tmp+='<span class="glyphicon glyphicon-transfer"></span>';
     }else{
-      tmp+=<span class="glyphicon glyphicon-remove"></span>;
+      tmp+='<span class="glyphicon glyphicon-remove"></span>';
     }
-    tmp+=</div></div>;
+    tmp+='</div></div>';
   }
-  let results = document.getElementById('results');
-  results.innerHTML = tmp;
-  if(cnt===4){
+  document.getElementById('results').innerHTML = tmp;
+  if(res==answer.value){
     return true;
   }else{
     return false;
@@ -74,13 +70,15 @@ function getResults(res){
 
 function showAnswer(win){
   let code = document.getElementById('code');
-  code.innerHTML = answer;
+  code.innerHTML = answer.value;
   if(win){
-    code.className = " success";
+    code.className += " success";
+  }else{
+    code.className += " failure";
   }
 }
 
 function showReplay(){
-  document.getElementById('guessing-div').style.display = none;
-  document.getElementById('replay-div').style.display = block;
+  document.getElementById('guessing-div').style.display = "none";
+  document.getElementById('replay-div').style.display = "block";
 }
